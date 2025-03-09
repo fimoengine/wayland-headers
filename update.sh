@@ -2,21 +2,15 @@
 set -euo pipefail
 set -x
 
-LIBDECOR_REV=7807ae3480f5c6a37c5e8505d94af1e764aaf704
-WAYLAND_REV=edb943dc6464697ba13d7df277aef277721764b7
-WAYLAND_PROTOCOLS_REV=e1d61ce9402ebd996d758c43f167e6280c1a3568
-
-# `git clone --depth 1` but at a specific revision
-git_clone_rev() {
+clone() {
     repo=$1
-    rev=$2
-    dir=$3
+    dir=$2
 
     rm -rf "$dir"
     mkdir "$dir"
     pushd "$dir"
     git init -q
-    git fetch "$repo" "$rev" --depth 1
+    git fetch "$repo" --depth 1
     git checkout -q FETCH_HEAD
     popd
 }
@@ -26,11 +20,11 @@ mkdir libdecor wayland wayland-protocols
 
 
 # install headers for libdecor
-git_clone_rev https://gitlab.freedesktop.org/libdecor/libdecor.git "$LIBDECOR_REV" _libdecor
+clone https://gitlab.freedesktop.org/libdecor/libdecor.git _libdecor
 mv _libdecor/src/*.h libdecor
 
 
-git_clone_rev https://gitlab.freedesktop.org/wayland/wayland.git "$WAYLAND_REV" _wayland
+clone https://gitlab.freedesktop.org/wayland/wayland.git _wayland
 
 # install/generate headers as per https://gitlab.freedesktop.org/wayland/wayland/-/blob/main/src/meson.build
 mv _wayland/src/wayland{-util,-server{,-core},-client{,-core}}.h wayland
@@ -48,7 +42,7 @@ wayland-scanner server-header _wayland/protocol/wayland.xml wayland/wayland-serv
 wayland-scanner client-header _wayland/protocol/wayland.xml wayland/wayland-client-protocol.h
 
 
-git_clone_rev https://gitlab.freedesktop.org/wayland/wayland-protocols.git "$WAYLAND_PROTOCOLS_REV" _wayland-protocols
+clone https://gitlab.freedesktop.org/wayland/wayland-protocols.git _wayland-protocols
 
 # generates wayland protocol headers specifically for GLFW
 generate_glfw() {
