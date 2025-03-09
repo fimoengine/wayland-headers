@@ -15,9 +15,6 @@ It includes:
   * xdg-decoration
   * xdg-shell
 
-* And headers for libdecor (see `libdecor/`)
-
-
 ## Updating
 
 To update this repository, run `./update.sh` followed by `./verify.sh` to verify the repository contents.
