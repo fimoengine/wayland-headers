@@ -621,6 +621,9 @@ wl_resource_instance_of(struct wl_resource *resource,
 const char *
 wl_resource_get_class(const struct wl_resource *resource);
 
+const struct wl_interface *
+wl_resource_get_interface(struct wl_resource *resource);
+
 void
 wl_resource_add_destroy_listener(struct wl_resource *resource,
 				 struct wl_listener *listener);
@@ -665,6 +668,12 @@ wl_shm_buffer_get_width(const struct wl_shm_buffer *buffer);
 
 int32_t
 wl_shm_buffer_get_height(const struct wl_shm_buffer *buffer);
+
+struct wl_shm_buffer *
+wl_shm_buffer_ref(struct wl_shm_buffer *buffer);
+
+void
+wl_shm_buffer_unref(struct wl_shm_buffer *buffer);
 
 struct wl_shm_pool *
 wl_shm_buffer_ref_pool(struct wl_shm_buffer *buffer);
